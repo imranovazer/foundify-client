@@ -1,0 +1,111 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+import { useToast } from 'primevue/usetoast'
+import { Button, InputText, Message, Toast } from 'primevue'
+import { Form } from '@primevue/forms'
+import { yupResolver } from '@primevue/forms/resolvers/yup'
+import * as yup from 'yup'
+import { createUser } from '@/api'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+
+const toast = useToast()
+const router = useRouter()
+const store = useUserStore()
+
+const initialValues = reactive({
+  name: '',
+  surname: '',
+  username: '',
+  email: '',
+  phone: '',
+})
+
+const resolver = yupResolver(
+  yup.object().shape({
+    name: yup.string().required('Name is required.'),
+    surname: yup.string().required('Surname is required.'),
+    username: yup.string().required('Username is required.'),
+    email: yup.string().email('Invalid email format').required('Email is required'),
+    phone: yup
+      .string()
+      .required('Phone number is required')
+      .matches(/^\d+(\.\d+)?$/, 'Must be a valid number'),
+  }),
+)
+
+const onFormSubmit = async ({
+  valid,
+  values,
+}: {
+  valid: boolean
+  values: typeof initialValues
+}) => {
+  if (valid) {
+    try {
+      const res = await createUser(values)
+      store.authUser(res.data)
+      router.push('/')
+      toast.add({
+        severity: 'success',
+        summary: 'User created.',
+        life: 3000,
+      })
+    } catch (error) {
+      toast.add({
+        severity: 'error',
+        summary: 'Something went wrong.',
+        life: 3000,
+      })
+    }
+  }
+}
+</script>
+
+<template>
+  <div class="flex flex-col gap-3.5 justify-center items-center min-h-[100vh]">
+    <Toast />
+    <h1 class="text-black font-bold dark:text-white">Register</h1>
+    <Form
+      v-slot="$form"
+      :initialValues
+      :resolver
+      @submit="onFormSubmit"
+      class="flex flex-col gap-4 w-full sm:w-56"
+    >
+      <div class="flex flex-col gap-1">
+        <InputText name="name" type="text" placeholder="Name" fluid />
+        <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">{{
+          $form.name.error?.message
+        }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="surname" type="text" placeholder="Surname" fluid />
+        <Message v-if="$form.surname?.invalid" severity="error" size="small" variant="simple">{{
+          $form.surname.error?.message
+        }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="username" type="text" placeholder="Username" fluid />
+        <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{
+          $form.username.error?.message
+        }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="email" type="text" placeholder="Email" fluid />
+        <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{
+          $form.email.error?.message
+        }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="phone" type="text" placeholder="Phone number" fluid />
+        <Message v-if="$form.phone?.invalid" severity="error" size="small" variant="simple">{{
+          $form.phone.error?.message
+        }}</Message>
+      </div>
+      <RouterLink to="/login" class="text-center"> Already member?</RouterLink>
+
+      <Button type="submit" severity="secondary" label="Register" />
+    </Form>
+  </div>
+</template>
