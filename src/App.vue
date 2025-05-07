@@ -13,6 +13,7 @@ onMounted(async () => {
     const res = await getUser(getUserFromLocalStorage() || '')
     user.authUser(res.data)
   } catch {
+    user.logOut()
     router.push('/register')
   }
 })

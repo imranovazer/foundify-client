@@ -41,17 +41,23 @@ export enum Category {
   OTHER = 'OTHER',
 }
 
-export interface FoundItem {
+export interface ReportedItem {
   id: string
   title: string
   description: string
   location: string
-  dateFound: string
   status: Status
   category: Category
   color: Color
   userId: string
   imageUrls: [string]
+}
+
+export interface FoundItem extends ReportedItem {
+  dateFound: string
+}
+export interface LostItem extends ReportedItem {
+  dateLost: string
 }
 
 export enum modalType {
