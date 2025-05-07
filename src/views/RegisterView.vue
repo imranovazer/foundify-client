@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { createUser } from '@/api'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import type { User } from '@/types'
 
 const toast = useToast()
 const router = useRouter()
@@ -34,16 +35,11 @@ const resolver = yupResolver(
   }),
 )
 
-const onFormSubmit = async ({
-  valid,
-  values,
-}: {
-  valid: boolean
-  values: typeof initialValues
-}) => {
+const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
+  const { valid, values } = event
   if (valid) {
     try {
-      const res = await createUser(values)
+      const res = await createUser(values as Omit<User, 'id'>)
       store.authUser(res.data)
       router.push('/')
       toast.add({

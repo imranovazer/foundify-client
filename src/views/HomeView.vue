@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { Carousel } from 'primevue'
 import { ref } from 'vue'
 import img1 from '@/assets/whyUs/1.jpg'

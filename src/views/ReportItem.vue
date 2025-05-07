@@ -63,11 +63,6 @@ const handleModalOpen = (type: modalType) => {
 }
 
 onMounted(async () => {
-  console.log(
-    new Date('Wed May 14 2025 00:00:00 GMT+0300 (Eastern European Summer Time)')
-      .toISOString()
-      .split('T')[0],
-  )
   try {
     const [foundResponse, lostResponse] = await Promise.all([getFoundItems(), getLostItems()])
     const myFoundItems = foundResponse.data.filter(
@@ -100,7 +95,6 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
       category: values.category.name,
       color: values.color.name,
     }
-    console.log('log', fileUpload.value.files)
     const formData = new FormData()
     formData.append('request', JSON.stringify(formatedJson))
     formData.append('images', fileUpload.value.files)

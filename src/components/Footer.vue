@@ -1,4 +1,4 @@
-<script setup></script>
+<script lang="ts" setup></script>
 
 <template>
   <footer class="bg-gray-900 text-gray-300">
