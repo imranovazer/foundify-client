@@ -15,9 +15,9 @@ import {
   InputText,
   Message,
   Select,
-  SpeedDial,
   Textarea,
   Toast,
+  ToggleSwitch,
   useToast,
 } from 'primevue'
 import { onMounted, reactive, ref } from 'vue'
@@ -27,7 +27,7 @@ const foundItems = ref<FoundItem[]>([])
 const lostItems = ref<LostItem[]>([])
 const user = useUserStore()
 const toast = useToast()
-
+const checked = ref(false)
 const modal = ref({ visibility: false, type: modalType.FOUND })
 const fileUpload = ref()
 const initialValues = reactive({
@@ -43,25 +43,8 @@ const colorOptions = ref(Object.values(Color).map((item) => ({ name: item })))
 
 const categoryOptions = ref(Object.values(Category).map((item) => ({ name: item })))
 
-const speedDialItems = ref([
-  {
-    label: 'Report lost item',
-    icon: 'pi pi-times',
-    command: () => {
-      handleModalOpen(modalType.LOST)
-    },
-  },
-  {
-    label: 'Report found item',
-    icon: 'pi pi-search',
-    command: () => {
-      handleModalOpen(modalType.FOUND)
-    },
-  },
-])
-
-const handleModalOpen = (type: modalType) => {
-  modal.value = { visibility: true, type }
+const handleModalOpen = () => {
+  modal.value = { visibility: true, type: modalType.FOUND }
 }
 const fetchFoundLoatItems = async () => {
   try {
@@ -132,12 +115,21 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
     }
   }
 }
+
+const toggleModal = (event: any) => {
+  if (event.target.checked) {
+    modal.value = { ...modal.value, type: modalType.LOST }
+  } else {
+    modal.value = { ...modal.value, type: modalType.FOUND }
+  }
+}
 </script>
 
 <template>
   <div class="w-full">
     <div class="container mx-auto flex flex-col justify-center items-center mt-[100px] gap-[30px]">
       <h1 class="font-bold text-4xl">Report items</h1>
+      <Button class="w-full max-w-[200px]" label="Report " @click="handleModalOpen" />
       <div class="flex justify-between w-full">
         <div class="flex items-center flex-col gap-[20px] w-full">
           <h2 class="font-bold">Your found items</h2>
@@ -168,23 +160,19 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
           </div>
         </div>
       </div>
-
-      <SpeedDial
-        :radius="80"
-        :model="speedDialItems"
-        direction="down"
-        :tooltipOptions="{ position: 'top', event: 'hover' }"
-        type="semi-circle"
-        style="position: absolute; left: calc(50% - 2rem); bottom: 50px"
-      />
     </div>
   </div>
   <Dialog
     v-model:visible="modal.visibility"
     modal
     :header="modal.type === modalType.FOUND ? 'Report found item' : 'Report lost item'"
-    :style="{ width: '25rem' }"
+    :style="{ width: '100%', maxWidth: '35rem' }"
   >
+    <div class="w-full flex gap-5 items-center my-4 justify-center">
+      <span>Found</span>
+      <ToggleSwitch v-model="checked" @change="(event) => toggleModal(event)" />
+      <span>Lost</span>
+    </div>
     <Form
       v-slot="$form"
       :initialValues
@@ -212,8 +200,8 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
       </div>
       <div class="flex flex-col gap-1">
         <DatePicker name="date" type="text" placeholder="Report date" dateFormat="yy-mm-dd" />
-        <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{
-          $form.email.error?.message
+        <Message v-if="$form.date?.invalid" severity="error" size="small" variant="simple">{{
+          $form.date.error?.message
         }}</Message>
       </div>
       <div class="flex flex-col gap-1">

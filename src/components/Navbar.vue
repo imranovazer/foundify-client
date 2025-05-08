@@ -64,6 +64,13 @@ const avaItems = computed(() => [
     label: 'Options',
     items: [
       {
+        label: store.user?.username,
+        icon: 'pi pi-user',
+        command: () => {
+          router.push('/profile')
+        },
+      },
+      {
         label: 'Theme',
         icon: themeStore.darkMode ? 'pi pi-moon' : 'pi pi-sun',
         command: () => {

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Carousel } from 'primevue'
 import { ref } from 'vue'
 import img1 from '@/assets/whyUs/1.jpg'
 import img2 from '@/assets/whyUs/2.jpg'
@@ -26,28 +25,6 @@ const whytoChooseUs = ref([
     image: img3,
   },
 ])
-const responsiveOptions = ref([
-  {
-    breakpoint: '1400px',
-    numVisible: 2,
-    numScroll: 1,
-  },
-  {
-    breakpoint: '1199px',
-    numVisible: 3,
-    numScroll: 1,
-  },
-  {
-    breakpoint: '767px',
-    numVisible: 2,
-    numScroll: 1,
-  },
-  {
-    breakpoint: '575px',
-    numVisible: 1,
-    numScroll: 1,
-  },
-])
 </script>
 
 <template>
@@ -66,28 +43,22 @@ const responsiveOptions = ref([
   <div class="w-full h-[700px] bg-slate-200 dark:bg-slate-900">
     <div class="container mx-auto h-[400px] py-10">
       <h2 class="font-bold text-2xl mb-[100px]">Why to choose us</h2>
-      <Carousel
-        :value="whytoChooseUs"
-        :numVisible="3"
-        :numScroll="3"
-        :responsiveOptions="responsiveOptions"
-      >
-        <template #item="slotProps">
-          <div
-            class="w-full max-w-[270px] bg-white dark:bg-slate-800 mx-auto h-full border border-gray-300/50 rounded-lg shadow-lg flex flex-col justify-between p-3 items-center gap-[20px]"
-          >
-            <h3 class="font-bold">{{ slotProps.data.title }}</h3>
-            <img
-              :src="slotProps.data.image"
-              alt="illustration"
-              class="object-cover object-center rounded-2xl w-[210px] h-[200px]"
-            />
-            <p>
-              {{ slotProps.data.description }}
-            </p>
-          </div>
-        </template>
-      </Carousel>
+      <div class="flex justify-between items-center">
+        <div
+          v-for="item in whytoChooseUs"
+          class="w-full max-w-[270px] bg-white dark:bg-slate-800 mx-auto h-full border border-gray-300/50 rounded-lg shadow-lg flex flex-col justify-between p-3 items-center gap-[20px]"
+        >
+          <h3 class="font-bold">{{ item.title }}</h3>
+          <img
+            :src="item.image"
+            alt="illustration"
+            class="object-cover object-center rounded-2xl w-[210px] h-[200px]"
+          />
+          <p>
+            {{ item.description }}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 

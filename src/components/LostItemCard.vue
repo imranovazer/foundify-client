@@ -20,7 +20,7 @@ onMounted(async () => {
 
 <template>
   <div
-    class="cursor-pointer w-full min-h-[100px] p-5 bg-gradient-to-r from-white via-gray-50 to-white border border-gray-200 shadow-md rounded-2xl hover:shadow-xl transition-shadow duration-300 flex items-center justify-between"
+    class="cursor-pointer w-full min-h-[100px] p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-md dark:shadow dark:shadow-black/20 rounded-2xl hover:shadow-xl transition-shadow duration-300 flex items-center justify-between text-gray-800 dark:text-gray-100"
   >
     <div class="flex gap-4 items-center">
       <img
@@ -30,7 +30,7 @@ onMounted(async () => {
       />
       <div class="flex flex-col gap-2 w-full">
         <div>
-          <h2 class="text-lg font-semibold text-gray-800">{{ item.title }}</h2>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-blue-200">{{ item.title }}</h2>
           <p class="text-sm text-gray-500">{{ item.category }}</p>
         </div>
         <div class="flex items-center gap-2">
