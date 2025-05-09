@@ -158,7 +158,7 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
   <div class="container mx-auto px-3 mt-[100px] flex gap-2 justify-between">
     <div class="w-full flex flex-col gap-3 items-center">
       <div
-        class="w-full max-w-[500px] bg-slate-100 dark:bg-gray-500 shadow-lg border-gray-300 font-bold text-2xl rounded-4xl px-4 py-2"
+        class="w-full max-w-[500px] bg-slate-100 dark:bg-gray-800 shadow-lg border-gray-300 font-bold text-2xl rounded-4xl px-4 py-2"
       >
         Found item details
       </div>
@@ -189,10 +189,10 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
           <span>{{ foundItem?.location }}</span>
         </div>
       </div>
-      <div class="rounded-lg bg-gray-300 dark:bg-gray-500 p-3 max-w-[400px]">
+      <div class="rounded-lg bg-gray-300 dark:bg-gray-800 p-3 max-w-[400px]">
         {{ foundItem?.description }}
       </div>
-      <div class="rounded-lg bg-gray-300 dark:bg-gray-500 p-3 max-w-[400px]">
+      <div class="rounded-lg bg-gray-300 dark:bg-gray-800 p-3 max-w-[400px]">
         <p class="flex item-center gap-2">
           <span class="font-bold"> Category: </span>
           <span>
