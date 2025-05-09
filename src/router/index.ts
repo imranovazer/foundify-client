@@ -5,6 +5,8 @@ import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import ReportItem from '@/views/ReportItem.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import FoundItemDetails from '@/views/FoundItemDetails.vue'
+import LostItemDetails from '@/views/LostItemDetails.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +33,22 @@ const router = createRouter({
       path: '/report-item',
       name: 'report-item',
       component: ReportItem,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/found-item/:id',
+      name: 'found-item',
+      component: FoundItemDetails,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/lost-item/:id',
+      name: 'lost-item',
+      component: LostItemDetails,
       meta: {
         requiresAuth: true,
       },

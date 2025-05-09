@@ -31,7 +31,6 @@ const onFormSubmit = ({ valid, values }: { valid: boolean; values: any }) => {
 
 <template>
   <div class="flex flex-col gap-3.5 justify-center items-center min-h-[100vh]">
-    <Toast />
     <h1 class="text-black font-bold dark:text-white">Log in</h1>
     <Form
       v-slot="$form"

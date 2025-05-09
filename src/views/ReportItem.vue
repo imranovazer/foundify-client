@@ -16,7 +16,6 @@ import {
   Message,
   Select,
   Textarea,
-  Toast,
   ToggleSwitch,
   useToast,
 } from 'primevue'
@@ -246,5 +245,4 @@ const toggleModal = (event: any) => {
       <Button type="submit" severity="info" label="Report" />
     </Form>
   </Dialog>
-  <Toast />
 </template>

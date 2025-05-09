@@ -4,13 +4,18 @@ import { useUserStore } from '@/stores/user'
 import type { User } from '@/types'
 import { Form } from '@primevue/forms'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
-import { Button, Card, InputText, Message, Toast, useToast } from 'primevue'
-import { computed, ref, watch } from 'vue'
+import { Button, Card, InputText, Message, useConfirm, useToast } from 'primevue'
+import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import * as yup from 'yup'
 
 const user = useUserStore()
 const toast = useToast()
+const confirm = useConfirm()
+const formRef = ref()
+
+const router = useRouter()
 const initialValues = ref({
   name: '',
   surname: '',
@@ -30,41 +35,65 @@ watch(
         email: val.email,
         phone: val.phone,
       }
+      // Set form values manually
+      formRef.value?.setValues(initialValues.value)
     }
   },
   { immediate: true },
 )
 
-const handleDeleteUser = async () => {
-  try {
-    await deleteUser(user.user?.id as string)
-    user.logOut()
-    toast.add({
-      severity: 'success',
-      summary: 'Profile deleted',
-      life: 3000,
-    })
-  } catch (error) {
-    toast.add({
-      severity: 'error',
-      summary: 'Something went wrong.',
-      life: 3000,
-    })
-  }
+const confirmPosition = () => {
+  confirm.require({
+    group: 'positioned',
+    message: 'Are you sure you want to delete your profile?',
+    header: 'Confirmation',
+    icon: 'pi pi-info-circle',
+    position: 'bottom',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      text: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+      text: true,
+    },
+    accept: async () => {
+      try {
+        await deleteUser(user.user?.id as string)
+        user.logOut()
+        router.push('/register')
+        toast.add({
+          severity: 'success',
+          summary: 'Profile deleted',
+          life: 3000,
+        })
+      } catch (error) {}
+    },
+    reject: () => {
+      toast.add({
+        severity: 'info',
+        summary: 'Rejected',
+        detail: 'Process incomplete',
+        life: 3000,
+      })
+    },
+  })
 }
 
-// const resolver = yupResolver(
-//   yup.object().shape({
-//     name: yup.string().required('Name is required.'),
-//     surname: yup.string().required('Surname is required.'),
-//     username: yup.string().required('Username is required.'),
-//     email: yup.string().email('Invalid email format').required('Email is required'),
-//     phone: yup
-//       .string()
-//       .required('Phone number is required')
-//       .matches(/^\d+(\.\d+)?$/, 'Must be a valid number'),
-//   }),
-// )
+const resolver = yupResolver(
+  yup.object().shape({
+    name: yup.string().required('Name is required.'),
+    surname: yup.string().required('Surname is required.'),
+    username: yup.string().required('Username is required.'),
+    email: yup.string().email('Invalid email format').required('Email is required'),
+    phone: yup
+      .string()
+      .required('Phone number is required')
+      .matches(/^\d+(\.\d+)?$/, 'Must be a valid number'),
+  }),
+)
 
 const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
   const { valid, values } = event
@@ -96,9 +125,11 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
       <template #content>
         <Form
           v-slot="$form"
+          :resolver="resolver"
           :initial-values="initialValues"
           @submit="onFormSubmit"
           class="flex flex-col gap-4 w-full sm:w-80"
+          ref="formRef"
         >
           <div class="flex flex-col gap-1">
             <label for="name">Name</label>
@@ -146,10 +177,9 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
           class="w-full mt-3"
           severity="danger"
           label="Delete profile"
-          @click="handleDeleteUser"
+          @click="confirmPosition"
         />
       </template>
     </Card>
   </div>
-  <Toast />
 </template>

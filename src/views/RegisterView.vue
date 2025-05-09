@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useToast } from 'primevue/usetoast'
-import { Button, InputText, Message, Toast } from 'primevue'
+import { Button, InputText, Message } from 'primevue'
 import { Form } from '@primevue/forms'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
 import * as yup from 'yup'
@@ -60,7 +60,6 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
 
 <template>
   <div class="flex flex-col gap-3.5 justify-center items-center min-h-[100vh]">
-    <Toast />
     <h1 class="text-black font-bold dark:text-white">Register</h1>
     <Form
       v-slot="$form"

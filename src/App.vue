@@ -5,6 +5,7 @@ import { onMounted } from 'vue'
 import { getUser } from './api'
 import { getUserFromLocalStorage } from './utils/localStorageUtils'
 import { useUserStore } from './stores/user'
+import { ConfirmDialog, Toast } from 'primevue'
 const user = useUserStore()
 onMounted(async () => {
   //temporary cheking if aut
@@ -20,6 +21,8 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Toast />
+  <ConfirmDialog group="positioned" />
   <Navbar />
   <RouterView />
 </template>

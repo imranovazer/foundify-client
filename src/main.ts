@@ -8,6 +8,7 @@ import Aura from '@primeuix/themes/aura'
 
 import App from './App.vue'
 import router from './router'
+import { ConfirmationService } from 'primevue'
 
 const app = createApp(App)
 
@@ -24,6 +25,8 @@ app.use(PrimeVue, {
     },
   },
 })
+app.use(ConfirmationService)
+
 app.use(ToastService)
 
 app.mount('#app')

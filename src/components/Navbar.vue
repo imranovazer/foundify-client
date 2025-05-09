@@ -115,18 +115,11 @@ const items = ref([
     },
   },
   {
-    label: 'External',
-    icon: 'pi pi-home',
-    items: [
-      {
-        label: 'Vue.js',
-        url: 'https://vuejs.org/',
-      },
-      {
-        label: 'Vite.js',
-        url: 'https://vitejs.dev/',
-      },
-    ],
+    label: 'Review',
+    icon: 'pi pi-pen-to-square',
+    command: () => {
+      router.push('/review')
+    },
   },
 ])
 // On mounted, check if there's a saved theme in localStorage

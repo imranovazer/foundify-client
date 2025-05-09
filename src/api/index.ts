@@ -1,5 +1,5 @@
 import { Axios } from '@/axios'
-import type { User } from '@/types'
+import type { FoundItem, LostItem, User } from '@/types'
 
 //----------------user ms---------------------------
 export const getUser = async (id: string) => {
@@ -46,6 +46,14 @@ export const getFoundItems = async () => {
     throw error
   }
 }
+export const getFoundItem = async (id: string) => {
+  try {
+    const res = await Axios.get(`/found-item/found-item/${id}`)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const createFoundItem = async (data: FormData) => {
   try {
@@ -55,12 +63,28 @@ export const createFoundItem = async (data: FormData) => {
     throw error
   }
 }
-
+export const editFoundItem = async (id: string, data: FoundItem) => {
+  try {
+    const res = await Axios.put(`/found-item/found-item/${id}`, data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 export const getFoundItemImage = async (id: string) => {
   try {
     const res = await Axios.get(`/found-item/image/${id}`, {
       responseType: 'blob', // 👈 This is the key part
     })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteFoundItem = async (id: string, userId: string) => {
+  try {
+    const res = await Axios.delete(`/found-item/found-item/${id}`, { params: { userId } })
     return res
   } catch (error) {
     throw error
@@ -76,10 +100,27 @@ export const getLostItems = async () => {
     throw error
   }
 }
+export const getLostItem = async (id: string) => {
+  try {
+    const res = await Axios.get(`/lost-item/lost-item/${id}`)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const createLostItem = async (data: FormData) => {
   try {
     const res = await Axios.post('/lost-item/lost-item', data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const editLostdItem = async (id: string, data: LostItem) => {
+  try {
+    const res = await Axios.put(`/lost-item/lost-item/${id}`, data)
     return res
   } catch (error) {
     throw error
@@ -91,6 +132,15 @@ export const getLostItemImage = async (id: string) => {
     const res = await Axios.get(`/lost-item/image/${id}`, {
       responseType: 'blob', // 👈 This is the key part
     })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteLostItem = async (id: string, userId: string) => {
+  try {
+    const res = await Axios.delete(`/lost-item/lost-item/${id}`, { params: { userId } })
     return res
   } catch (error) {
     throw error

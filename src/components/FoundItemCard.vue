@@ -3,6 +3,7 @@ import { getFoundItemImage } from '@/api'
 import { Status, type FoundItem } from '@/types'
 import { Tag } from 'primevue'
 import { onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const imageUrl = ref()
 
@@ -19,16 +20,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="cursor-pointer w-full min-h-[100px] p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-md dark:shadow dark:shadow-black/20 rounded-2xl hover:shadow-xl transition-shadow duration-300 flex items-center justify-between text-gray-800 dark:text-gray-100"
+  <RouterLink
+    :to="`found-item/${item.id}`"
+    class="cursor-pointer w-full min-h-[100px] px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-md dark:shadow dark:shadow-black/20 rounded-2xl hover:shadow-xl transition-shadow duration-300 flex items-center justify-between text-gray-800 dark:text-gray-100"
   >
     <div class="flex gap-4 items-center">
       <img
         :src="imageUrl"
         alt="found item"
-        class="w-full max-w-[80px] h-[80px] rounded-xl overflow-hidden object-cover"
+        class="w-[80px] h-[80px] rounded-xl overflow-hidden object-cover"
       />
-      <div class="flex flex-col gap-2 w-full">
+      <div class="flex flex-col gap-2">
         <div>
           <h2 class="text-lg font-semibold text-gray-800 dark:text-blue-200">{{ item.title }}</h2>
           <p class="text-sm text-gray-500">{{ item.category }}</p>
@@ -45,5 +47,5 @@ onMounted(async () => {
     </div>
 
     <Tag :severity="item.status === Status.PENDING ? 'info' : 'danger'">{{ item.status }}</Tag>
-  </div>
+  </RouterLink>
 </template>
