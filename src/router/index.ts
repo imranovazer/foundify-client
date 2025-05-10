@@ -7,6 +7,8 @@ import ReportItem from '@/views/ReportItem.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import FoundItemDetails from '@/views/FoundItemDetails.vue'
 import LostItemDetails from '@/views/LostItemDetails.vue'
+import ReviewView from '@/views/ReviewView.vue'
+import ReviewDetails from '@/views/ReviewDetails.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +59,22 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/review',
+      name: 'review',
+      component: ReviewView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/review/:id',
+      name: 'reviewDetails',
+      component: ReviewDetails,
       meta: {
         requiresAuth: true,
       },

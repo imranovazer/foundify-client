@@ -41,7 +41,7 @@ const whytoChooseUs = ref([
   </header>
 
   <div class="w-full h-[700px] bg-slate-200 dark:bg-slate-900">
-    <div class="container mx-auto h-[400px] py-10">
+    <div class="container mx-auto h-[400px] py-10 px-5">
       <h2 class="font-bold text-2xl mb-[100px]">Why to choose us</h2>
       <div class="flex justify-between items-center">
         <div

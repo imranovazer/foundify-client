@@ -28,7 +28,10 @@ export enum Color {
   GOLD = 'GOLD',
   SILVER = 'SILVER',
 }
-
+export enum ApprovalType {
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+}
 export enum Category {
   ELECTRONICS = 'ELECTRONICS',
   WALLET = 'WALLET',
@@ -63,4 +66,28 @@ export interface LostItem extends ReportedItem {
 export enum modalType {
   FOUND = 'FOUND',
   LOST = 'LOST',
+}
+
+export enum Approval {
+  NOT_REVIEWED = 'NOT_REVIEWED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+
+export enum ReviewStatus {
+  IN_REVIEW = 'IN_REVIEW',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+export interface Review {
+  id: string
+  matchId: string
+  lostItemId: string
+  foundItemId: string
+  lostItemOwnerId: string
+  foundItemOwnerId: string
+  loserApproval: Approval
+  founderApproval: Approval
+  status: ReviewStatus
+  matchedAt: string
 }

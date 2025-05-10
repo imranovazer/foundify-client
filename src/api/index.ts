@@ -1,5 +1,5 @@
 import { Axios } from '@/axios'
-import type { FoundItem, LostItem, User } from '@/types'
+import type { ApprovalType, FoundItem, LostItem, User } from '@/types'
 
 //----------------user ms---------------------------
 export const getUser = async (id: string) => {
@@ -141,6 +141,38 @@ export const getLostItemImage = async (id: string) => {
 export const deleteLostItem = async (id: string, userId: string) => {
   try {
     const res = await Axios.delete(`/lost-item/lost-item/${id}`, { params: { userId } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+//----------------Review ms---------------------------
+
+export const getAllReviews = async () => {
+  try {
+    const res = await Axios.get('/review/review')
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getReview = async (id: string) => {
+  try {
+    const res = await Axios.get(`/review/review/${id}`)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateReview = async (
+  id: string,
+  params: { userId: string; approvalType: ApprovalType },
+) => {
+  try {
+    const res = await Axios.get(`/review/review/${id}`, { params })
     return res
   } catch (error) {
     throw error
