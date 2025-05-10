@@ -8,8 +8,9 @@ import {
   getReview,
   updateReview,
 } from '@/api'
+import ReviewerStatus from '@/components/ReviewerStatus.vue'
 import { useUserStore } from '@/stores/user'
-import { type Review, Status, type FoundItem, type LostItem, ApprovalType } from '@/types'
+import { type Review, Status, type FoundItem, type LostItem, ApprovalType, Approval } from '@/types'
 import type { AxiosResponse } from 'axios'
 import { Button, Divider, Galleria, Tag, useConfirm, useToast } from 'primevue'
 import { onMounted, ref } from 'vue'
@@ -45,6 +46,7 @@ const confirmPosition = () => {
           userId: user.user?.id as string,
           approvalType: ApprovalType.APPROVE,
         })
+        await fetchReviewDetails()
         toast.add({
           severity: 'success',
           summary: 'Confirmed',
@@ -59,6 +61,8 @@ const confirmPosition = () => {
           userId: user.user?.id as string,
           approvalType: ApprovalType.REJECT,
         })
+        await fetchReviewDetails()
+
         toast.add({
           severity: 'info',
           summary: 'Rejected',
@@ -180,6 +184,14 @@ onMounted(() => {
                 foundItem?.status
               }}</Tag>
             </p>
+            <Divider />
+
+            <p class="flex item-center gap-2">
+              <span class="font-bold"> Reviewer status: </span>
+              <span>
+                <ReviewerStatus :status="review?.founderApproval" />
+              </span>
+            </p>
           </div>
         </div>
       </div>
@@ -240,6 +252,14 @@ onMounted(() => {
               <Tag :severity="lostItem?.status === Status.PENDING ? 'info' : 'danger'">{{
                 lostItem?.status
               }}</Tag>
+            </p>
+            <Divider />
+
+            <p class="flex item-center gap-2">
+              <span class="font-bold"> Reviewer status: </span>
+              <span>
+                <ReviewerStatus :status="review?.loserApproval" />
+              </span>
             </p>
           </div>
         </div>

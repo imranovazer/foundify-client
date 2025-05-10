@@ -172,7 +172,7 @@ export const updateReview = async (
   params: { userId: string; approvalType: ApprovalType },
 ) => {
   try {
-    const res = await Axios.get(`/review/review/${id}`, { params })
+    const res = await Axios.put(`/review/review/${id}/approve`, {}, { params })
     return res
   } catch (error) {
     throw error
