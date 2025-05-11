@@ -63,6 +63,14 @@ export const createFoundItem = async (data: FormData) => {
     throw error
   }
 }
+export const addFoundItemImages = async (data: FormData) => {
+  try {
+    const res = await Axios.post('/found-item/found-item/images', data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 export const editFoundItem = async (id: string, data: FoundItem) => {
   try {
     const res = await Axios.put(`/found-item/found-item/${id}`, data)
@@ -85,6 +93,16 @@ export const getFoundItemImage = async (id: string) => {
 export const deleteFoundItem = async (id: string, userId: string) => {
   try {
     const res = await Axios.delete(`/found-item/found-item/${id}`, { params: { userId } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+export const deleteFoundItemImage = async (id: string, userId: string, imageId: string) => {
+  try {
+    const res = await Axios.delete(`/found-item/found-item/${id}/images/${imageId}`, {
+      params: { userId },
+    })
     return res
   } catch (error) {
     throw error
@@ -117,6 +135,14 @@ export const createLostItem = async (data: FormData) => {
     throw error
   }
 }
+export const addLostItemImages = async (data: FormData) => {
+  try {
+    const res = await Axios.post('/lost-item/lost-item/images', data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const editLostdItem = async (id: string, data: LostItem) => {
   try {
@@ -141,6 +167,17 @@ export const getLostItemImage = async (id: string) => {
 export const deleteLostItem = async (id: string, userId: string) => {
   try {
     const res = await Axios.delete(`/lost-item/lost-item/${id}`, { params: { userId } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteLostItemImage = async (id: string, userId: string, imageId: string) => {
+  try {
+    const res = await Axios.delete(`/lost-item/lost-item/${id}/images/${imageId}`, {
+      params: { userId },
+    })
     return res
   } catch (error) {
     throw error

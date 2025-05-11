@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { deleteFoundItem, editFoundItem, getFoundItem, getFoundItemImage } from '@/api'
+import {
+  deleteFoundItem,
+  deleteFoundItemImage,
+  editFoundItem,
+  getFoundItem,
+  getFoundItemImage,
+} from '@/api'
 import { useUserStore } from '@/stores/user'
 import { Category, Color, Status, type FoundItem } from '@/types'
 import { Form } from '@primevue/forms'
@@ -20,7 +26,7 @@ import {
   useConfirm,
   useToast,
 } from 'primevue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import * as yup from 'yup'
 
@@ -73,7 +79,9 @@ const modal = ref(false)
 const openModal = () => (modal.value = true)
 const toast = useToast()
 const route = useRoute()
-const images = ref<string[]>([])
+const images = ref<{ id: string; url: string }[]>([])
+
+const imagesToDelete = ref<string[]>([])
 
 const colorOptions = ref(Object.values(Color).map((item) => ({ name: item })))
 const categoryOptions = ref(Object.values(Category).map((item) => ({ name: item })))
@@ -109,10 +117,11 @@ const fetchFoundItem = async () => {
       color: { name: res.data.color },
     }
     const imagePromises = res.data.imageUrls.map((url: string) =>
-      getFoundItemImage(url).then((res) => URL.createObjectURL(res.data)),
+      getFoundItemImage(url).then((res) => ({ id: url, url: URL.createObjectURL(res.data) })),
     )
 
     images.value = await Promise.all(imagePromises)
+    console.log(images.value)
   } catch (error) {
     console.error('Error fetching found item or images:', error)
   }
@@ -121,7 +130,20 @@ const fetchFoundItem = async () => {
 onMounted(() => {
   fetchFoundItem()
 })
+const deleteSelectedImages = async () => {
+  if (!foundItem.value?.id || !user.user?.id || imagesToDelete.value.length === 0) return
 
+  const deletePromises = imagesToDelete.value.map((imageId) =>
+    deleteFoundItemImage(foundItem.value!.id, user.user!.id, imageId),
+  )
+
+  try {
+    await Promise.all(deletePromises)
+    console.log('All selected images deleted')
+  } catch (err) {
+    console.error('Error deleting images:', err)
+  }
+}
 const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
   const { valid, values } = event
   if (valid) {
@@ -135,6 +157,8 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
 
     try {
       await editFoundItem(foundItem.value?.id as string, formatedJson as FoundItem)
+
+      await deleteSelectedImages()
       modal.value = false
       fetchFoundItem()
 
@@ -150,6 +174,15 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         life: 3000,
       })
     }
+  }
+}
+
+const toggleDelte = (id: string) => {
+  const index = imagesToDelete.value?.indexOf(id)
+  if (index === -1) {
+    imagesToDelete.value?.push(id)
+  } else {
+    imagesToDelete.value.splice(index, 1)
   }
 }
 </script>
@@ -172,7 +205,7 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         :showThumbnails="false"
       >
         <template #item="slotProps">
-          <img :src="slotProps.item" class="w-full h-[400px] object-cover object-center" />
+          <img :src="slotProps.item.url" class="w-full h-[400px] object-cover object-center" />
         </template>
       </Galleria>
     </div>
@@ -281,6 +314,24 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
           $form.color.error?.message
         }}</Message>
       </div>
+      <span class="font-bold">Choose images to delete : </span>
+      <div v-if="images.length > 1" class="flex items-center gap-3 w-full">
+        <div
+          v-for="image in images"
+          class="relative rounded-lg overflow-hidden cursor-pointer"
+          @click="toggleDelte(image.id)"
+        >
+          <img
+            :src="image.url"
+            alt="to delete"
+            class="w-[100px] h-[100px] object-cover object-center rounded-lg"
+          />
+          <div
+            v-if="imagesToDelete?.includes(image.id)"
+            class="absolute left-0 top-0 bg-red-500/50 w-full h-[100px]"
+          ></div>
+        </div>
+      </div>
       <div class="card">
         <FileUpload
           ref="fileUpload"
@@ -300,3 +351,5 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
     </Form>
   </Dialog>
 </template>
+
+<style></style>
