@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { deleteLostItem, editLostdItem, getLostItem, getLostItemImage } from '@/api'
+import {
+  addLostItemImages,
+  deleteLostItem,
+  editLostdItem,
+  getLostItem,
+  getLostItemImage,
+} from '@/api'
 import { useUserStore } from '@/stores/user'
 import { Category, Color, Status, type LostItem } from '@/types'
 import { Form } from '@primevue/forms'
@@ -28,6 +34,7 @@ const confirm = useConfirm()
 const router = useRouter()
 const user = useUserStore()
 const lostItem = ref<LostItem>()
+const fileUpload = ref()
 
 const confirmPosition = () => {
   confirm.require({
@@ -122,6 +129,23 @@ onMounted(() => {
   fetchLostItem()
 })
 
+const addNewImage = async () => {
+  const request = {
+    foundItemId: lostItem.value?.id,
+    userId: user?.user?.id,
+  }
+  const formData = new FormData()
+  formData.append('request', JSON.stringify(request))
+  for (let i = 0; i < fileUpload.value.files.length; i++) {
+    formData.append('images', fileUpload.value.files[i])
+  }
+
+  await addLostItemImages(formData)
+
+  try {
+  } catch (err) {}
+}
+
 const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
   const { valid, values } = event
   if (valid) {
@@ -135,6 +159,9 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
 
     try {
       await editLostdItem(lostItem.value?.id as string, formatedJson as LostItem)
+      if (fileUpload.value.files.length > 0) {
+        await addNewImage()
+      }
       modal.value = false
       fetchLostItem()
 
