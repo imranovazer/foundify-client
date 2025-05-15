@@ -98,6 +98,16 @@ export const deleteFoundItem = async (id: string, userId: string) => {
     throw error
   }
 }
+export const deleteFoundItemImage = async (id: string, userId: string, imageId: string) => {
+  try {
+    const res = await Axios.delete(`/found-item/found-item/${id}/images/${imageId}`, {
+      params: { userId },
+    })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 //----------------lost item ms---------------------------
 
 export const getLostItems = async () => {
@@ -156,6 +166,17 @@ export const getLostItemImage = async (id: string) => {
 export const deleteLostItem = async (id: string, userId: string) => {
   try {
     const res = await Axios.delete(`/lost-item/lost-item/${id}`, { params: { userId } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const deleteLostItemImage = async (id: string, userId: string, imageId: string) => {
+  try {
+    const res = await Axios.delete(`/lost-item/lost-item/${id}/images/${imageId}`, {
+      params: { userId },
+    })
     return res
   } catch (error) {
     throw error

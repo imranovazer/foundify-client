@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  deleteLostItemImage,
   addLostItemImages,
   deleteLostItem,
   editLostdItem,
@@ -80,7 +81,9 @@ const modal = ref(false)
 const openModal = () => (modal.value = true)
 const toast = useToast()
 const route = useRoute()
-const images = ref<string[]>([])
+const images = ref<{ id: string; url: string }[]>([])
+
+const imagesToDelete = ref<string[]>([])
 
 const colorOptions = ref(Object.values(Color).map((item) => ({ name: item })))
 const categoryOptions = ref(Object.values(Category).map((item) => ({ name: item })))
@@ -116,7 +119,7 @@ const fetchLostItem = async () => {
       color: { name: res.data.color },
     }
     const imagePromises = res.data.imageUrls.map((url: string) =>
-      getLostItemImage(url).then((res) => URL.createObjectURL(res.data)),
+      getLostItemImage(url).then((res) => ({ id: url, url: URL.createObjectURL(res.data) })),
     )
 
     images.value = await Promise.all(imagePromises)
@@ -129,6 +132,20 @@ onMounted(() => {
   fetchLostItem()
 })
 
+const deleteSelectedImages = async () => {
+  if (!lostItem.value?.id || !user.user?.id || imagesToDelete.value.length === 0) return
+
+  const deletePromises = imagesToDelete.value.map((imageId) =>
+    deleteLostItemImage(lostItem.value!.id, user.user!.id, imageId),
+  )
+
+  try {
+    await Promise.all(deletePromises)
+    console.log('All selected images deleted')
+  } catch (err) {
+    console.error('Error deleting images:', err)
+  }
+}
 const addNewImage = async () => {
   const request = {
     foundItemId: lostItem.value?.id,
@@ -159,6 +176,8 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
 
     try {
       await editLostdItem(lostItem.value?.id as string, formatedJson as LostItem)
+
+      await deleteSelectedImages()
       if (fileUpload.value.files.length > 0) {
         await addNewImage()
       }
@@ -177,6 +196,15 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         life: 3000,
       })
     }
+  }
+}
+
+const toggleDelte = (id: string) => {
+  const index = imagesToDelete.value?.indexOf(id)
+  if (index === -1) {
+    imagesToDelete.value?.push(id)
+  } else {
+    imagesToDelete.value.splice(index, 1)
   }
 }
 </script>
@@ -199,7 +227,7 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         :showThumbnails="false"
       >
         <template #item="slotProps">
-          <img :src="slotProps.item" class="w-full h-[400px] object-cover object-center" />
+          <img :src="slotProps.item.url" class="w-full h-[400px] object-cover object-center" />
         </template>
       </Galleria>
     </div>
@@ -307,6 +335,24 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         <Message v-if="$form.color?.invalid" severity="error" size="small" variant="simple">{{
           $form.color.error?.message
         }}</Message>
+      </div>
+      <span class="font-bold">Choose images to delete : </span>
+      <div v-if="images.length > 1" class="flex items-center gap-3 w-full">
+        <div
+          v-for="image in images"
+          class="relative rounded-lg overflow-hidden cursor-pointer"
+          @click="toggleDelte(image.id)"
+        >
+          <img
+            :src="image.url"
+            alt="to delete"
+            class="w-[100px] h-[100px] object-cover object-center rounded-lg"
+          />
+          <div
+            v-if="imagesToDelete?.includes(image.id)"
+            class="absolute left-0 top-0 bg-red-500/50 w-full h-[100px]"
+          ></div>
+        </div>
       </div>
       <div class="card">
         <FileUpload

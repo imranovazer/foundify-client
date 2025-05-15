@@ -8,7 +8,7 @@
           <Avatar image="/images.jpeg" shape="circle" />
           <span class="mx-2 font-bold">Foundify</span>
         </div>
-        <ul class="flex items-center gap-3">
+        <ul v-if="store.isAuthenticated" class="flex items-center gap-3">
           <li>
             <RouterLink
               active-class="py-1 px-3 bg-slate-300 dark:bg-slate-800 rounded-lg "
