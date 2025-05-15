@@ -143,7 +143,6 @@ export const addLostItemImages = async (data: FormData) => {
     throw error
   }
 }
-
 export const editLostdItem = async (id: string, data: LostItem) => {
   try {
     const res = await Axios.put(`/lost-item/lost-item/${id}`, data)
