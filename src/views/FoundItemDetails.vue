@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import {
-<<<<<<< HEAD
-  deleteFoundItem,
   deleteFoundItemImage,
-=======
   addFoundItemImages,
   deleteFoundItem,
->>>>>>> 399de045766f6eeb88305c339aac06dc6f77b13e
   editFoundItem,
   getFoundItem,
   getFoundItemImage,
@@ -139,7 +135,6 @@ onMounted(() => {
 const deleteSelectedImages = async () => {
   if (!foundItem.value?.id || !user.user?.id || imagesToDelete.value.length === 0) return
 
-<<<<<<< HEAD
   const deletePromises = imagesToDelete.value.map((imageId) =>
     deleteFoundItemImage(foundItem.value!.id, user.user!.id, imageId),
   )
@@ -151,7 +146,6 @@ const deleteSelectedImages = async () => {
     console.error('Error deleting images:', err)
   }
 }
-=======
 const addNewImage = async () => {
   const request = {
     foundItemId: foundItem.value?.id,
@@ -169,7 +163,6 @@ const addNewImage = async () => {
   } catch (err) {}
 }
 
->>>>>>> 399de045766f6eeb88305c339aac06dc6f77b13e
 const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
   const { valid, values } = event
   if (valid) {
@@ -183,14 +176,11 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
 
     try {
       await editFoundItem(foundItem.value?.id as string, formatedJson as FoundItem)
-<<<<<<< HEAD
 
       await deleteSelectedImages()
-=======
       if (fileUpload.value.files.length > 0) {
         await addNewImage()
       }
->>>>>>> 399de045766f6eeb88305c339aac06dc6f77b13e
       modal.value = false
       fetchFoundItem()
 

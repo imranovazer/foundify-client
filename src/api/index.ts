@@ -1,5 +1,16 @@
 import { Axios } from '@/axios'
-import type { ApprovalType, FoundItem, LostItem, User } from '@/types'
+import type { ApprovalType, AuthDto, FoundItem, LostItem, User } from '@/types'
+
+//---------------auth ms--------------------------
+
+export const loginUser = async (data: AuthDto) => {
+  try {
+    const res = await Axios.post('/auth/auth/login', data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 //----------------user ms---------------------------
 export const getUser = async (id: string) => {
@@ -37,6 +48,14 @@ export const deleteUser = async (id: string) => {
   }
 }
 //----------------found item ms---------------------------
+export const getFoundItemsByUser = async (id: string) => {
+  try {
+    const res = await Axios.get('/found-item/found-item/by-user', { params: { userId: id } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const getFoundItems = async () => {
   try {
@@ -109,6 +128,14 @@ export const deleteFoundItemImage = async (id: string, userId: string, imageId: 
   }
 }
 //----------------lost item ms---------------------------
+export const getLostItemsByUser = async (id: string) => {
+  try {
+    const res = await Axios.get('/lost-item/lost-item/by-user', { params: { userId: id } })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const getLostItems = async () => {
   try {
