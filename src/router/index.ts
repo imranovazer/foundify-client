@@ -9,6 +9,7 @@ import FoundItemDetails from '@/views/FoundItemDetails.vue'
 import LostItemDetails from '@/views/LostItemDetails.vue'
 import ReviewView from '@/views/ReviewView.vue'
 import ReviewDetails from '@/views/ReviewDetails.vue'
+import { getTokenFromLocalStorage, getUserFromLocalStorage } from '@/utils/localStorageUtils'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,11 +84,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userIsLoggedIn = localStorage.getItem('user')
-
-  if (to.meta.requiresAuth && !userIsLoggedIn) {
+  const userIsLoggedIn = getUserFromLocalStorage()
+  const token = getTokenFromLocalStorage()
+  if (to.meta.requiresAuth && !userIsLoggedIn && !token) {
     next({ name: 'login' })
-  } else if ((to.name === 'login' || to.name === 'register') && userIsLoggedIn) {
+  } else if ((to.name === 'login' || to.name === 'register') && userIsLoggedIn && token) {
     next({ name: 'home' })
   } else {
     next()

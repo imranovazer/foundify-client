@@ -91,3 +91,8 @@ export interface Review {
   status: ReviewStatus
   matchedAt: string
 }
+
+export interface AuthDto {
+  email: string
+  password: string
+}

@@ -20,6 +20,7 @@ const initialValues = reactive({
   username: '',
   email: '',
   phone: '',
+  password  : ''
 })
 
 const resolver = yupResolver(
@@ -27,6 +28,7 @@ const resolver = yupResolver(
     name: yup.string().required('Name is required.'),
     surname: yup.string().required('Surname is required.'),
     username: yup.string().required('Username is required.'),
+    password : yup.string().required('Password us required') ,
     email: yup.string().email('Invalid email format').required('Email is required'),
     phone: yup
       .string()
@@ -39,12 +41,12 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
   const { valid, values } = event
   if (valid) {
     try {
-      const res = await createUser(values as Omit<User, 'id'>)
+      const res = await createUser(values as  Omit<User, 'id'>)
       store.authUser(res.data)
-      router.push('/')
+      router.push('/login')
       toast.add({
         severity: 'success',
-        summary: 'User created.',
+        summary: 'User registered login please.',
         life: 3000,
       })
     } catch (error) {
@@ -96,6 +98,12 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
         <InputText name="phone" type="text" placeholder="Phone number" fluid />
         <Message v-if="$form.phone?.invalid" severity="error" size="small" variant="simple">{{
           $form.phone.error?.message
+        }}</Message>
+      </div>
+      <div class="flex flex-col gap-1">
+        <InputText name="password" type="password" placeholder="Password" fluid />
+        <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple">{{
+          $form.password.error?.message
         }}</Message>
       </div>
       <RouterLink to="/login" class="text-center"> Already member?</RouterLink>
