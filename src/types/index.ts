@@ -96,3 +96,10 @@ export interface AuthDto {
   email: string
   password: string
 }
+
+export interface MessageDto {
+  sender: string
+  receiver: string
+  content: string
+  timestamp: string
+}

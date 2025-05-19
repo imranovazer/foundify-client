@@ -6,7 +6,7 @@ import { Form } from '@primevue/forms'
 import { yupResolver } from '@primevue/forms/resolvers/yup'
 import * as yup from 'yup'
 import { RouterLink, useRouter } from 'vue-router'
-import { loginUser } from '@/api'
+import { getMyInfo, loginUser } from '@/api'
 import type { AxiosResponse } from 'axios'
 import { useUserStore } from '@/stores/user'
 import type { AuthDto, User } from '@/types'
@@ -17,21 +17,18 @@ const user = useUserStore()
 const router = useRouter()
 const initialValues = reactive({
   email: '',
-  password : ''
+  password: '',
 })
-
 
 const resolver = yupResolver(
   yup.object().shape({
     email: yup.string().email('Invalid email format').required('Email is required'),
     password: yup.string().required('Password is required'),
-
   }),
 )
 
 const onFormSubmit = async (event: { valid: boolean; values: Record<string, any> }) => {
   const { valid, values } = event
-  console.log('LOGGG', values)
 
   if (valid) {
     type Token = { token: string }
@@ -39,23 +36,23 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
       const res: AxiosResponse<Token> = await loginUser(values as AuthDto)
 
       saveToken(res.data.token)
-      router.push('/');
+
+      const myData = await getMyInfo()
+
+      user.authUser(myData.data)
+      router.push('/')
       toast.add({
         severity: 'success',
         summary: 'Login is successfull.',
         life: 3000,
       })
-    
-    } catch (
-      err
-    ) {
+    } catch (err) {
       toast.add({
         severity: 'error',
         summary: 'Something went wrong.',
         life: 3000,
       })
     }
-   
   }
 }
 </script>

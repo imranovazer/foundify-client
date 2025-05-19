@@ -20,7 +20,7 @@ const initialValues = reactive({
   username: '',
   email: '',
   phone: '',
-  password  : ''
+  password: '',
 })
 
 const resolver = yupResolver(
@@ -28,7 +28,7 @@ const resolver = yupResolver(
     name: yup.string().required('Name is required.'),
     surname: yup.string().required('Surname is required.'),
     username: yup.string().required('Username is required.'),
-    password : yup.string().required('Password us required') ,
+    password: yup.string().required('Password us required'),
     email: yup.string().email('Invalid email format').required('Email is required'),
     phone: yup
       .string()
@@ -41,8 +41,8 @@ const onFormSubmit = async (event: { valid: boolean; values: Record<string, any>
   const { valid, values } = event
   if (valid) {
     try {
-      const res = await createUser(values as  Omit<User, 'id'>)
-      store.authUser(res.data)
+      const res = await createUser(values as Omit<User, 'id'>)
+
       router.push('/login')
       toast.add({
         severity: 'success',

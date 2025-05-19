@@ -9,7 +9,8 @@ import FoundItemDetails from '@/views/FoundItemDetails.vue'
 import LostItemDetails from '@/views/LostItemDetails.vue'
 import ReviewView from '@/views/ReviewView.vue'
 import ReviewDetails from '@/views/ReviewDetails.vue'
-import { getTokenFromLocalStorage, getUserFromLocalStorage } from '@/utils/localStorageUtils'
+import { getTokenFromLocalStorage } from '@/utils/localStorageUtils'
+import ChatView from '@/views/ChatView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,15 +81,22 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
+    {
+      path: `/chat/:with`,
+      name: 'chat',
+      component: ChatView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  const userIsLoggedIn = getUserFromLocalStorage()
-  const token = getTokenFromLocalStorage()
-  if (to.meta.requiresAuth && !userIsLoggedIn && !token) {
+  const userIsLoggedIn = getTokenFromLocalStorage()
+  if (to.meta.requiresAuth && !userIsLoggedIn) {
     next({ name: 'login' })
-  } else if ((to.name === 'login' || to.name === 'register') && userIsLoggedIn && token) {
+  } else if ((to.name === 'login' || to.name === 'register') && userIsLoggedIn) {
     next({ name: 'home' })
   } else {
     next()

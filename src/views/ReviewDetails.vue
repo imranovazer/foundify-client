@@ -122,6 +122,10 @@ const fetchReviewDetails = async () => {
 onMounted(() => {
   fetchReviewDetails()
 })
+
+const navigateToChat = (path: string) => {
+  router.push(`/chat/${path}`)
+}
 </script>
 
 <template>
@@ -265,6 +269,26 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <Button label="Review" class="mx-auto w-full max-w-[1100px]" rounded @click="confirmPosition" />
+
+    <div class="mx-auto w-full max-w-[1100px] flex flex-col gap-[10px]">
+      <Button
+        v-if="lostItem?.userId !== user.user?.id"
+        label="Chat with loser"
+        severity="info"
+        class="w-full"
+        rounded
+        @click="navigateToChat(lostItem?.userId as string)"
+      />
+      <Button
+        v-if="foundItem?.userId !== user.user?.id"
+        severity="info"
+        label="Chat with founder"
+        class="w-full"
+        rounded
+        @click="navigateToChat(foundItem?.userId as string)"
+      />
+
+      <Button label="Review" class="w-full" rounded @click="confirmPosition" />
+    </div>
   </div>
 </template>
