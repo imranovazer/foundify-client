@@ -1,5 +1,5 @@
 import { Axios } from '@/axios'
-import type { ApprovalType, AuthDto, FoundItem, LostItem, User } from '@/types'
+import type { ApprovalType, AuthDto, FoundItem, LostItem, MessageDto, User } from '@/types'
 
 //---------------auth ms--------------------------
 
@@ -13,6 +13,15 @@ export const loginUser = async (data: AuthDto) => {
 }
 
 //----------------user ms---------------------------
+export const getMyInfo = async () => {
+  try {
+    const res = await Axios.get(`/user/user/info`)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
 export const getUser = async (id: string) => {
   try {
     const res = await Axios.get(`/user/user/${id}`)
@@ -236,6 +245,44 @@ export const updateReview = async (
 ) => {
   try {
     const res = await Axios.put(`/review/review/${id}/approve`, {}, { params })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+//----------------chat-ms --------------
+export const sendMessage = async (sessionId: string, data: MessageDto) => {
+  try {
+    const res = await Axios.post(`/chat/${sessionId}/send`, data)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+export const closeChatSession = async (
+  sessionId: string,
+  params: { userId1: string; userId2: string },
+) => {
+  try {
+    const res = await Axios.post(`/chat/${sessionId}/close`, {}, { params })
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+export const getCachedChatHistory = async (sessionId: string) => {
+  try {
+    const res = await Axios.get(`/chat/${sessionId}/history`)
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
+export const getDbChatHistory = async (params: { userId1: string; userId2: string }) => {
+  try {
+    const res = await Axios.get(`/chat/history/db`, { params })
     return res
   } catch (error) {
     throw error
