@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { v4 as uuidv4 } from 'uuid'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { MessageDto } from '@/types'
 import { useUserStore } from '@/stores/user'
 import { closeChatSession, getCachedChatHistory, getDbChatHistory, sendMessage } from '@/api'
@@ -11,7 +10,9 @@ import { Button } from 'primevue'
 const sessionId = '3777dbd3-589d-4a99-8ae3-eeffcbd8e20f'
 const route = useRoute()
 const messages = ref<MessageDto[]>([])
+const cachedMessages = ref<MessageDto[]>([])
 const newMessage = ref('')
+const allMessages = computed(() => [...messages.value, ...cachedMessages.value])
 const isSending = ref(false)
 let pollInterval: number | undefined
 
@@ -33,12 +34,13 @@ const getChatHistory = async () => {
 const pollCachedMessages = async () => {
   try {
     const cached = await getCachedChatHistory(sessionId)
-    messages.value = cached.data
+    cachedMessages.value = cached.data
   } catch (err) {
     console.error('Error polling cached messages:', err)
   }
 }
 onMounted(() => {
+  localStorage.setItem('chatWith', route.params.with as string)
   pollInterval = setInterval(pollCachedMessages, 1500) // every 1 second
 })
 
@@ -79,13 +81,11 @@ watch(
   (newUserId) => {
     if (newUserId) {
       getChatHistory()
-      localStorage.setItem('chatWith', newUserId)
     }
   },
   { immediate: true },
 )
 onUnmounted(() => {
-  console.log('unmount')
   endSession()
   if (pollInterval) {
     clearInterval(pollInterval)
@@ -96,9 +96,9 @@ onUnmounted(() => {
 <template>
   <div class="chat-container">
     <div class="chat-history">
-      <div v-if="messages.length === 0">No messages to display</div>
+      <div v-if="allMessages.length === 0">No messages to display</div>
       <div
-        v-for="(msg, index) in messages"
+        v-for="(msg, index) in allMessages"
         :key="index"
         :class="`chat-message ${msg.sender === user.user?.id && 'justify-self-end'}`"
       >
